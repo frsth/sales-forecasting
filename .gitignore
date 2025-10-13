@@ -12,7 +12,6 @@ data/
 *.parquet
 
 # Models
-models/
 *.pkl
 *.joblib
 *.h5
