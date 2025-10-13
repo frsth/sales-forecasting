@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.ipynb_checkpoints
+
+# Data
+data/
+*.csv
+*.xlsx
+*.parquet
+
+# Models
+models/
+*.pkl
+*.joblib
+*.h5
+
+# Logs
+mlruns/
+*.log
+
+# Environment files
+.env
+venv/
+.venv/
