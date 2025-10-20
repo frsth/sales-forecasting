@@ -6,6 +6,9 @@ import holidays
 def build_features(df):
     daily_df = (df.groupby('datetime').agg(total_sales=('Sales', 'sum'), avg_discount=('Discount', 'mean')).reset_index())
 
+    # Fill NaN avg discounts
+    daily_df['avg_discount'] = daily_df['avg_discount'].fillna(0)
+
     # Fill all days
     all_days_range = pd.date_range(start=daily_df['datetime'].min(), end=daily_df['datetime'].max()) 
     all_days = pd.DataFrame({'datetime': all_days_range})

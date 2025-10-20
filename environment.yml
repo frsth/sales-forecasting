@@ -1,6 +1,7 @@
 name: forecasting_env
 channels:
   - conda-forge
+  - pytorch
 dependencies:
   - python=3.11
   - pandas>=2.0
@@ -12,6 +13,10 @@ dependencies:
   - matplotlib>=3.8
   - seaborn>=0.12
   - xgboost
+  - pytorch
+  - torchvision
+  - torchaudio
+  - cpuonly
   - pip
   - pip:
       - optuna>=3.0
