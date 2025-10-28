@@ -10,8 +10,8 @@ from src.features.build_features import build_features, build_features_test_data
 
 
 
-test_data_path = "../../data/test_data.csv"
-train_data_path = "../../data/train_data.csv"
+test_data_path = "data/test_data.csv"
+train_data_path = "data/train_data.csv"
 
 
 # -------- LOAD & PREPARE DATA --------
@@ -25,11 +25,11 @@ test_df = build_features_test_data(df)
 
 
 # Import models
-model_path = '../../models/best_lgbm_q50_model.pkl'
+model_path = 'models/best_lgbm_q50_model.pkl'
 model_q50 = pickle.load(open(model_path, "rb"))
-model_path = '../../models/best_lgbm_q10_model.pkl'
+model_path = 'models/best_lgbm_q10_model.pkl'
 model_q10 = pickle.load(open(model_path, "rb"))
-model_path = '../../models/best_lgbm_q90_model.pkl'
+model_path = 'models/best_lgbm_q90_model.pkl'
 model_q90 = pickle.load(open(model_path, "rb"))
 
 # lag features ffor first test day
