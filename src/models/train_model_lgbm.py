@@ -8,6 +8,8 @@ from sklearn.metrics import mean_absolute_error
 import lightgbm as lgb
 import joblib
 import os
+print(os.getcwd())
+
 from src.features.build_features import build_features
 
 # -------- CONFIG --------

@@ -4,6 +4,7 @@ import datetime
 import holidays
 
 def build_features(df):
+    # Compute daily total sales anf avg discount
     daily_df = (df.groupby('datetime').agg(total_sales=('Sales', 'sum'), avg_discount=('Discount', 'mean')).reset_index())
 
     # Fill NaN avg discounts
@@ -17,6 +18,9 @@ def build_features(df):
 
     # Replace NaN (days with no sales) by 0
     daily_df['total_sales'] = daily_df['total_sales'].fillna(0)
+
+    # Replace NaN avg discounts with 0 
+    daily_df['avg_discount'] = daily_df['avg_discount'].fillna(0)
 
     # year
     daily_df['year'] = daily_df['datetime'].dt.year
@@ -61,12 +65,18 @@ def build_features(df):
 
 
 def build_features_test_data(df):
+
+    # Compute daily total sales anf avg discount
     daily_df = (df.groupby('datetime').agg(total_sales=('Sales', 'sum'), avg_discount=('Discount', 'mean')).reset_index())
+
+    # Replace NaN avg discounts with 0 
+    daily_df['avg_discount'] = daily_df['avg_discount'].fillna(0)
 
     # Fill all days
     all_days_range = pd.date_range(start=daily_df['datetime'].min(), end=daily_df['datetime'].max()) 
     all_days = pd.DataFrame({'datetime': all_days_range})
-    # Merge with your daily data
+
+    # Merge with  daily data
     daily_df = all_days.merge(daily_df, on='datetime', how='left')
 
     # Replace NaN (days with no sales) by 0
