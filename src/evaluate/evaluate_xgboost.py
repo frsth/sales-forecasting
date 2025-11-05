@@ -24,13 +24,9 @@ df['datetime'] = pd.to_datetime(df['datetime'])
 test_df = build_features_test_data(df)
 
 
-# Import models
-model_path = 'models/best_lgbm_q50_model.pkl'
-model_q50 = pickle.load(open(model_path, "rb"))
-model_path = 'models/best_lgbm_q10_model.pkl'
-model_q10 = pickle.load(open(model_path, "rb"))
-model_path = 'models/best_lgbm_q90_model.pkl'
-model_q90 = pickle.load(open(model_path, "rb"))
+# Import model
+model_path = 'models/best_xgboost_model.pkl'
+model = pickle.load(open(model_path, "rb"))
 
 # lag features ffor first test day
 
@@ -42,10 +38,9 @@ test_df.loc[0,'lag7'] = train_df.loc[train_df.index[-7],'total_sales']
 #%% Sequential predictions
 
 test_df['forecast'] = np.nan
-test_df['forecast_q10'] = np.nan
-test_df['forecast_q90'] = np.nan
 
-features = [c for c in test_df.columns if c not in ["datetime", "total_sales", 'forecast', 'forecast_q10','forecast_q90']]
+
+features = [c for c in test_df.columns if c not in ["datetime", "total_sales", 'forecast']]
 
 for i in test_df.index:
 
@@ -55,13 +50,9 @@ for i in test_df.index:
         test_df.loc[i, 'lag7'] = train_df.loc[train_df.index[-7 + i],'total_sales']
 
     X = test_df.loc[[i],features]
-    y_pred = model_q50.predict(X)
-    y_q10 = model_q10.predict(X)
-    y_q90 = model_q90.predict(X)
+    y_pred = model.predict(X)
 
     test_df.loc[i, 'forecast'] = max(y_pred,0)
-    test_df.loc[i, 'forecast_q10'] = max(y_q10,0)
-    test_df.loc[i, 'forecast_q90'] = max(y_q90,0)
 
 
     if i+1 in test_df.index:
@@ -90,18 +81,14 @@ sns.set_theme()
 # Actuals
 plt.plot(test_df['total_sales'], label="Actual sales")
 
-# Median prediction
-plt.plot(test_df['forecast'], label="Predicted median (q=0.5)")
-
-# Shaded quantile interval
-#plt.fill_between(test_df["datetime"],test_df['forecast_q10'], test_df['forecast_q90'], color="orange", alpha=0.3,  label="10–90% prediction interval")
-
+#  prediction
+plt.plot(test_df['forecast'], label="Predicted Sales")
 
 #plt.xlim([datetime.datetime(2017,8,1), datetime.datetime(2017,11,1) ])
 plt.legend()
 plt.tight_layout()
 plt.ylabel('Total Sales ($)')
-plt.title('Daily Sales Forecast with LightGBM Quantile Regression')
+plt.title('Daily Sales Forecast with XGBoost')
 plt.xlabel('Day')
 props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
 textstr = f"MAE: {mae:.2f}"

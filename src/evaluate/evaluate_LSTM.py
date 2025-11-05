@@ -77,17 +77,37 @@ with torch.no_grad():
 y_test_actual = np.expm1(y_test*scaler.data_range_[0] + scaler.data_min_[0]) 
 y_pred_actual = np.expm1(y_pred*scaler.data_range_[0] + scaler.data_min_[0])
 
+
+# Performance
+from sklearn.metrics import mean_absolute_error
+
+
+mae = mean_absolute_error(y_test_actual, y_pred_actual)
+smape = 100 * np.mean(2 * np.abs(y_test_actual - y_pred_actual) / (np.abs(y_test_actual) + np.abs(y_pred_actual) + 1e-8))
+
+print(f"MAE: {mae:.2f}")
+print(f"MAPE: {smape:.2f}%")
+
+
+
 # plot
 import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_theme()
 
-plt.plot(y_test_actual, label='Actual')
+ax = plt.plot(y_test_actual, label='Actual')
 plt.plot(y_pred_actual, label='Predicted')
 plt.legend()
-#plt.xlim([0, 25])
+
+plt.ylabel('Total Sales ($)')
+plt.xlabel('Day')
+plt.title('Daily Sales Forecast with LSTM')
+
+props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+textstr = f"MAE: {mae:.2f}"
+plt.text(0.95, 5500, textstr, fontsize=14,
+        verticalalignment='top', bbox=props)
+
 plt.show()
 
 
-
-# %%
